@@ -1,4 +1,4 @@
-﻿// 
+// 
 //  Copyright (c) Microsoft Corporation. All rights reserved. 
 //  Licensed under the Apache License, Version 2.0 (the "License");
 //  you may not use this file except in compliance with the License.
@@ -12,7 +12,16 @@
 //  limitations under the License.
 //  
 
-namespace Microsoft.PackageManagement.Iso19770.SwidTag {
-    public class Class1 {
+namespace Microsoft.PackageManagement.SwidTag {
+    public enum OptionType {
+        String = 0,
+        StringArray = 1,
+        Int = 2,
+        Switch = 3,
+        Folder = 4,
+        File = 5,
+        Path = 6,
+        Uri = 7,
+        SecureString = 8
     }
 }
