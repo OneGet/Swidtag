@@ -68,6 +68,61 @@ namespace Microsoft.PackageManagement.SwidTag {
             return null;
         }
 
+
+        private static bool AdvanceToElement(Sgml.SgmlReader reader, string elementName) {
+            while (!reader.EOF && ( reader.NodeType != XmlNodeType.Element || reader.Name != elementName)) {
+                reader.Read();
+            }
+            return !reader.EOF;
+        }
+
+        public static IEnumerable<string> testing(string swidTagHtml) {
+            using (var reader = new Sgml.SgmlReader {
+                DocType = "HTML",
+                WhitespaceHandling = WhitespaceHandling.All,
+                StripDocType = true,
+                InputStream = new StringReader(swidTagHtml),
+                CaseFolding = Sgml.CaseFolding.ToLower
+            }) {
+                var document = XDocument.Load(reader);
+
+                var swidTag = new Swidtag {
+                    Name = "Anonymous",
+                    Version = "1.0",
+                    VersionScheme = Iso19770_2.VersionScheme.MultipartNumeric
+                };
+
+                if (document.Root != null) {
+                    var html = document.Root;
+                    var ns = html.Name.Namespace;
+
+                    var head = html.Element(ns + "head");
+                    if (head != null) {
+                        var links = head.Elements(ns + "link");
+
+                        foreach (var link in links) {
+                            var href = link.Attribute( "href");
+                            var rel = link.Attribute("rel");
+
+                            if (href != null && rel != null) {
+                                var l = swidTag.AddLink(new Uri(href.Value), rel.Value);
+                                foreach (var attr in link.Attributes()) {
+                                    l.AddAttribute(attr.Name, attr.Value);
+
+                                }
+                            }
+                            
+                           //  yield return link.Name.ToString();
+                        }
+
+
+                    }
+                }
+                yield return swidTag.SwidTagXml;
+            }
+            
+        }
+
         public string SwidTagXml {
             get {
                 var stringBuilder = new StringBuilder();

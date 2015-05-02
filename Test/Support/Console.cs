@@ -26,7 +26,11 @@ namespace Microsoft.PackageManagement.SwidTag.Test.Support {
                 if (Tests.CurrentOut != null) {
                     // first Flush queue
                     Flush();
-                    Tests.CurrentOut.WriteLine(format, args);
+                    if (args.Length == 0) {
+                        Tests.CurrentOut.WriteLine("{0}", format);
+                    } else {
+                        Tests.CurrentOut.WriteLine(format, args);
+                    }
                 } else {
                     // Event<WriteLine>.Raise(format, args);
                     lock (_queue) {
