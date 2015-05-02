@@ -12,7 +12,7 @@
 //  limitations under the License.
 //  
 
-namespace Swidtag {
+namespace Microsoft.PackageManagement.Iso19770.SwidTag {
     public class Class1 {
     }
 }
