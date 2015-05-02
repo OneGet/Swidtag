@@ -16,6 +16,7 @@ namespace Microsoft.PackageManagement.SwidTag {
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using System.Xml;
@@ -42,7 +43,32 @@ namespace Microsoft.PackageManagement.SwidTag {
                 xmlDocument)) {
         }
 
-        public string SwidTagText {
+        public static Swidtag LoadXml(string swidTagXml) {
+            return null;
+        }
+
+        public static Swidtag LoadJson(string swidTagJson) {
+            return null;
+        }
+
+        public static Swidtag LoadHtml(string swidTagHtml) {
+            var reader = new Sgml.SgmlReader { 
+               DocType = "HTML", 
+               WhitespaceHandling = WhitespaceHandling.All, 
+               StripDocType = true, 
+               InputStream = new StringReader(swidTagHtml), 
+               CaseFolding = Sgml.CaseFolding.ToLower 
+           };
+
+            reader.Read();
+            while (!reader.EOF) {
+                // HTML loader supports <Link> tags in the <head>
+                
+            }
+            return null;
+        }
+
+        public string SwidTagXml {
             get {
                 var stringBuilder = new StringBuilder();
 

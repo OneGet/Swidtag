@@ -20,7 +20,7 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
     using System.Text;
     using System.Text.RegularExpressions;
 
-    internal static class StringExtensions {
+    public static class StringExtensions {
         private static readonly char[] _wildcardCharacters = new[] {
             '*', '?'
         };
