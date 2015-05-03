@@ -81,7 +81,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Role.LocalName);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Role, value);
             }
         }

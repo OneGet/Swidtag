@@ -47,7 +47,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Type);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Type, value);
             }
         }

@@ -161,9 +161,8 @@ namespace Microsoft.PackageManagement.SwidTag {
 
         public static class Installation {
             // Package Link Installer Attributes 
-            public static readonly XName InstallParameters = Namespace.Installation+ "install-parameters";
+            public static readonly XName InstallParameters = Namespace.Installation + "install-parameters";
             public static readonly XName InstallScript = Namespace.Installation + "install-script";
-
         }
 
         public static class MediaType {
@@ -225,7 +224,6 @@ namespace Microsoft.PackageManagement.SwidTag {
             public static readonly XNamespace Iso19770_2 = XNamespace.Get("http://standards.iso.org/iso/19770/-2/2015/schema.xsd");
             public static readonly XNamespace Discovery = XNamespace.Get("http://packagemanagement.org/discovery");
             public static readonly XNamespace Installation = XNamespace.Get("http://packagemanagement.org/installation");
-
             public static readonly XNamespace OneGet = XNamespace.Get("http://oneget.org/packagemanagement");
             public static readonly XNamespace Xml = XNamespace.Get("http://www.w3.org/XML/1998/namespace");
             public static XNamespace XmlDsig = XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");

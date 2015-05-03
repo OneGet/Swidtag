@@ -77,10 +77,14 @@
     <Compile Include="Swidtag.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
-    <Compile Include="Utility\ExceptionExtensionscs.cs" />
+    <Compile Include="Utility\ExceptionExtensions.cs" />
+    <Compile Include="Utility\FilesystemExtensions.cs" />
+    <Compile Include="Utility\MoveFileFlags.cs" />
     <Compile Include="Utility\MutableEnumerable.cs" />
+    <Compile Include="Utility\NativeMethods.cs" />
     <Compile Include="Utility\ReEnumerable.cs" />
     <Compile Include="Utility\StringExtensions.cs" />
+    <Compile Include="Utility\VersionComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

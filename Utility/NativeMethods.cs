@@ -12,18 +12,15 @@
 //  limitations under the License.
 //  
 
-namespace Microsoft.PackageManagement.SwidTag {
-    using System.IO;
-    using System.Reflection;
-    using JsonLD.Core;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+namespace Microsoft.PackageManagement.SwidTag.Utility {
+    using System.Runtime.InteropServices;
+    using System.Text;
 
-    public class ContextDownloader : DocumentLoader {
-        private static readonly JToken _context = JToken.ReadFrom(new JsonTextReader(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Microsoft.PackageManagement.SwidTag.Properties.Swidtag.context.jsonld"))));
+    public static class NativeMethods {
+        [DllImport("kernel32.dll", EntryPoint = "MoveFileEx", CharSet = CharSet.Unicode)]
+        internal static extern bool MoveFileEx(string lpExistingFileName, string lpNewFileName, MoveFileFlags dwFlags);
 
-        public override RemoteDocument LoadDocument(string url) {
-            return new RemoteDocument(url, _context);
-        }
+        [DllImport("mpr.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+        internal static extern int WNetGetConnection([MarshalAs(UnmanagedType.LPTStr)] string localName, [MarshalAs(UnmanagedType.LPTStr)] StringBuilder remoteName, ref int length);
     }
 }

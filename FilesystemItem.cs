@@ -38,7 +38,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Key).IsTruePreserveNull();
             }
-            set  {
+            set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Key, value.ToString());
                 }
@@ -55,7 +55,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Location);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Location, value);
             }
         }
@@ -68,7 +68,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Name);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Name, value);
             }
         }
@@ -84,7 +84,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Root);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Root, value);
             }
         }

@@ -155,6 +155,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 }
             }
         }
+
         public override string ToString() {
             return Attributes.ToString();
         }

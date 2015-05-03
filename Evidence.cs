@@ -53,7 +53,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 }
                 return null;
             }
-            set  {
+            set {
                 if (value == null) {
                     return;
                 }
@@ -70,7 +70,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.DeviceId);
             }
-            set  {
+            set {
                 AddAttribute(Iso19770_2.Attributes.DeviceId, value);
             }
         }

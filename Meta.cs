@@ -38,13 +38,10 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return Attributes[key];
             }
-
             set {
                 AddAttribute(key, value);
             }
         }
-
-        
 
         public override string ToString() {
             return Attributes.ToString();

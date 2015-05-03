@@ -161,26 +161,6 @@ namespace Microsoft.PackageManagement.SwidTag {
             }
         }
 
-        /*
-         * // Feed Link Extended attributes: 
-            public static readonly XName MinimumName = Namespace.Discovery + "min-name";
-            public static readonly XName MaximumName = Namespace.Discovery + "max-name";
-            public static readonly XName MinimumVersion = Namespace.Discovery + "min-version";
-            public static readonly XName MaximumVersion = Namespace.Discovery + "max-version";
-            public static readonly XName Keyword = Namespace.Discovery + "keyword";
-            // Package Link Extended Attributes 
-            public static readonly XName Version = Namespace.Discovery + "version";
-            public static readonly XName Latest = Namespace.Discovery + "latest";
-            public static readonly XName TargetFilename = Namespace.Discovery + "targetFilename";
-            public static readonly XName Type = Namespace.Discovery + "type";
-        }
-
-        public static class Installation {
-            // Package Link Installer Attributes 
-            public static readonly XName InstallParameters = Namespace.Installation+ "install-parameters";
-            public static readonly XName InstallScript = Namespace.Installation + "install-script";
-         */
-
         public string MinimumName {
             get {
                 return GetAttribute(Iso19770_2.Discovery.MinimumName);
@@ -189,6 +169,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.MinimumName, value);
             }
         }
+
         public string MaximumName {
             get {
                 return GetAttribute(Iso19770_2.Discovery.MaximumName);
@@ -197,6 +178,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.MaximumName, value);
             }
         }
+
         public string MinimumVersion {
             get {
                 return GetAttribute(Iso19770_2.Discovery.MinimumVersion);
@@ -205,6 +187,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.MinimumVersion, value);
             }
         }
+
         public string MaximumVersion {
             get {
                 return GetAttribute(Iso19770_2.Discovery.MaximumVersion);
@@ -213,6 +196,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.MaximumVersion, value);
             }
         }
+
         public string Keyword {
             get {
                 return GetAttribute(Iso19770_2.Discovery.Keyword);
@@ -221,6 +205,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.Keyword, value);
             }
         }
+
         public string Version {
             get {
                 return GetAttribute(Iso19770_2.Discovery.Version);
@@ -229,6 +214,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.Version, value);
             }
         }
+
         public string Latest {
             get {
                 return GetAttribute(Iso19770_2.Discovery.Latest);
@@ -237,6 +223,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.Latest, value);
             }
         }
+
         public string Type {
             get {
                 return GetAttribute(Iso19770_2.Discovery.Type);
@@ -245,6 +232,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Discovery.Type, value);
             }
         }
+
         public string InstallParameters {
             get {
                 return GetAttribute(Iso19770_2.Installation.InstallParameters);
@@ -253,6 +241,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 AddAttribute(Iso19770_2.Installation.InstallParameters, value);
             }
         }
+
         public string InstallScript {
             get {
                 return GetAttribute(Iso19770_2.Installation.InstallScript);

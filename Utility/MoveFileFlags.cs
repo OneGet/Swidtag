@@ -12,18 +12,14 @@
 //  limitations under the License.
 //  
 
-namespace Microsoft.PackageManagement.SwidTag {
-    using System.IO;
-    using System.Reflection;
-    using JsonLD.Core;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Linq;
+namespace Microsoft.PackageManagement.SwidTag.Utility {
+    using System;
 
-    public class ContextDownloader : DocumentLoader {
-        private static readonly JToken _context = JToken.ReadFrom(new JsonTextReader(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Microsoft.PackageManagement.SwidTag.Properties.Swidtag.context.jsonld"))));
-
-        public override RemoteDocument LoadDocument(string url) {
-            return new RemoteDocument(url, _context);
-        }
+    [Flags]
+    internal enum MoveFileFlags {
+        ReplaceExisting = 1,
+        CopyAllowed = 2,
+        DelayUntilReboot = 4,
+        WriteThrough = 8
     }
 }

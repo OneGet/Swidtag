@@ -292,7 +292,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.TagVersion);
             }
-             set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.TagVersion, value);
             }
         }
@@ -301,7 +301,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.TagId);
             }
-             set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.TagId, value);
             }
         }
@@ -310,7 +310,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Patch).IsTruePreserveNull();
             }
-             set {
+            set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Patch, value.ToString());
                 }
@@ -321,7 +321,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Supplemental).IsTruePreserveNull();
             }
-             set {
+            set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Supplemental, value.ToString());
                 }
@@ -332,7 +332,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Media);
             }
-             set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Media, value);
             }
         }

@@ -18,7 +18,7 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
     using System.Linq;
     using System.Reflection;
 
-    internal static class CollectionExtensions {
+    public static class CollectionExtensions {
         private static readonly MethodInfo _castMethod = typeof (Enumerable).GetMethod("Cast");
         private static readonly MethodInfo _toArrayMethod = typeof (Enumerable).GetMethod("ToArray");
         private static readonly IDictionary<Type, MethodInfo> _castMethods = new Dictionary<Type, MethodInfo>();
