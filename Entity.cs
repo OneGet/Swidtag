@@ -51,7 +51,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Name);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Name, value);
             }
         }
@@ -81,7 +81,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Role.LocalName);
             }
-            internal set {
+            set  {
                 AddAttribute(Iso19770_2.Attributes.Role, value);
             }
         }
@@ -94,7 +94,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Thumbprint.LocalName);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Thumbprint, value);
             }
         }
@@ -108,7 +108,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.RegId.LocalName);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.RegId, value);
             }
         }
@@ -149,7 +149,7 @@ namespace Microsoft.PackageManagement.SwidTag {
         ///     Adds a nested metadata element to the entity.
         /// </summary>
         /// <returns></returns>
-        internal Meta AddMeta() {
+        public Meta AddMeta() {
             return AddElement(new Meta());
         }
     }

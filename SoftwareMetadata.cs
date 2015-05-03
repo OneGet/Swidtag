@@ -32,7 +32,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.ActivationStatus);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.ActivationStatus, value);
             }
         }
@@ -41,7 +41,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.ChannelType);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.ChannelType, value);
             }
         }
@@ -50,7 +50,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Description);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Description, value);
             }
         }
@@ -59,7 +59,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.ColloquialVersion);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.ColloquialVersion, value);
             }
         }
@@ -68,7 +68,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Edition);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Edition, value);
             }
         }
@@ -77,7 +77,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.EntitlementKey);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.EntitlementKey, value);
             }
         }
@@ -86,7 +86,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Generator);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Generator, value);
             }
         }
@@ -95,7 +95,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.PersistentId);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.PersistentId, value);
             }
         }
@@ -104,7 +104,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Product);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Product, value);
             }
         }
@@ -113,7 +113,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.ProductFamily);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.ProductFamily, value);
             }
         }
@@ -122,7 +122,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Revision);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Revision, value);
             }
         }
@@ -131,7 +131,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.UnspscCode);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.UnspscCode, value);
             }
         }
@@ -140,7 +140,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.UnspscVersion);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.UnspscVersion, value);
             }
         }
@@ -149,13 +149,12 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.EntitlementDataRequired).IsTruePreserveNull();
             }
-            internal set {
+            set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.EntitlementDataRequired, value.ToString());
                 }
             }
         }
-
         public override string ToString() {
             return Attributes.ToString();
         }

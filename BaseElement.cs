@@ -45,7 +45,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.XmlLang);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.XmlLang, value);
             }
         }

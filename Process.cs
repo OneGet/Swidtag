@@ -37,7 +37,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Name);
             }
-            internal set {
+            set  {
                 AddAttribute(Iso19770_2.Attributes.Name, value);
             }
         }
@@ -57,7 +57,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 }
                 return null;
             }
-            internal set {
+            set  {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Pid, value.ToString());
                 }

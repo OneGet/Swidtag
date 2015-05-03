@@ -51,7 +51,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Artifact);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Artifact, value);
             }
         }
@@ -90,7 +90,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 }
                 return null;
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.HRef, value.ToString());
             }
         }
@@ -105,7 +105,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Media);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Media, value);
             }
         }
@@ -117,7 +117,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Ownership);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Ownership, value);
             }
         }
@@ -129,7 +129,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Relationship);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Relationship, value);
             }
         }
@@ -144,7 +144,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.MediaType);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.MediaType, value);
             }
         }
@@ -156,8 +156,109 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Use);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Use, value);
+            }
+        }
+
+        /*
+         * // Feed Link Extended attributes: 
+            public static readonly XName MinimumName = Namespace.Discovery + "min-name";
+            public static readonly XName MaximumName = Namespace.Discovery + "max-name";
+            public static readonly XName MinimumVersion = Namespace.Discovery + "min-version";
+            public static readonly XName MaximumVersion = Namespace.Discovery + "max-version";
+            public static readonly XName Keyword = Namespace.Discovery + "keyword";
+            // Package Link Extended Attributes 
+            public static readonly XName Version = Namespace.Discovery + "version";
+            public static readonly XName Latest = Namespace.Discovery + "latest";
+            public static readonly XName TargetFilename = Namespace.Discovery + "targetFilename";
+            public static readonly XName Type = Namespace.Discovery + "type";
+        }
+
+        public static class Installation {
+            // Package Link Installer Attributes 
+            public static readonly XName InstallParameters = Namespace.Installation+ "install-parameters";
+            public static readonly XName InstallScript = Namespace.Installation + "install-script";
+         */
+
+        public string MinimumName {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.MinimumName);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.MinimumName, value);
+            }
+        }
+        public string MaximumName {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.MaximumName);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.MaximumName, value);
+            }
+        }
+        public string MinimumVersion {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.MinimumVersion);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.MinimumVersion, value);
+            }
+        }
+        public string MaximumVersion {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.MaximumVersion);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.MaximumVersion, value);
+            }
+        }
+        public string Keyword {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.Keyword);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.Keyword, value);
+            }
+        }
+        public string Version {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.Version);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.Version, value);
+            }
+        }
+        public string Latest {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.Latest);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.Latest, value);
+            }
+        }
+        public string Type {
+            get {
+                return GetAttribute(Iso19770_2.Discovery.Type);
+            }
+            set {
+                AddAttribute(Iso19770_2.Discovery.Type, value);
+            }
+        }
+        public string InstallParameters {
+            get {
+                return GetAttribute(Iso19770_2.Installation.InstallParameters);
+            }
+            set {
+                AddAttribute(Iso19770_2.Installation.InstallParameters, value);
+            }
+        }
+        public string InstallScript {
+            get {
+                return GetAttribute(Iso19770_2.Installation.InstallScript);
+            }
+            set {
+                AddAttribute(Iso19770_2.Installation.InstallScript, value);
             }
         }
 

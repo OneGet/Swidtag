@@ -47,7 +47,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 }
                 return null;
             }
-            internal set {
+            set  {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Size, value.ToString());
                 }
@@ -62,7 +62,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Version);
             }
-            internal set {
+            set  {
                 AddAttribute(Iso19770_2.Attributes.Version, value);
             }
         }
