@@ -86,7 +86,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                         result.Add(Iso19770_2.Elements.Meta.ToJsonId(), meta);
                     }
                     // return result.ToString();
-                    var doc = SetStandardContext(Compact(result)).ToString(Formatting.None);
+                    var doc = SetStandardContext(Compact(result)).ToString(Formatting.Indented);
                     return doc.Replace(@"""discovery:", @"""")
                         .Replace(@"""swid:", @"""")
                         .Replace(@"""install:", @"""");
@@ -129,22 +129,22 @@ namespace Microsoft.PackageManagement.SwidTag {
             return null;
         }
 
-        internal static JObject Normalize(string swidTagText) {
+        public static JObject Normalize(string swidTagText) {
             return Expand(JToken.ReadFrom(new JsonTextReader(new StringReader(swidTagText))));
         }
 
-        internal static JObject SetStandardContext(JObject obj) {
+        public static JObject SetStandardContext(JObject obj) {
             obj.Remove("@context");
             obj.Add("@context", JToken.FromObject("http://packagemanagement.org/discovery"));
             return obj;
         }
 
-        internal static JObject Compact(JToken swidTag) {
+        public static JObject Compact(JToken swidTag) {
             // first, compact it to the canonical context
             return JsonLdProcessor.Compact(swidTag, _context, _options);
         }
 
-        internal static JObject Expand(JToken swidTag) {
+        public static JObject Expand(JToken swidTag) {
             // then, expand it out so we can walk it with strong types
             var expanded = JsonLdProcessor.Expand(Compact(swidTag), _options).FirstOrDefault().ToJObject();
 
@@ -254,7 +254,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Corpus).IsTruePreserveNull();
             }
-            internal set {
+            set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Corpus, value.ToString());
                 }
@@ -265,7 +265,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Name);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Name, value);
             }
         }
@@ -274,7 +274,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Version);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.Version, value);
             }
         }
@@ -283,7 +283,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.VersionScheme);
             }
-            internal set {
+            set {
                 AddAttribute(Iso19770_2.Attributes.VersionScheme, value);
             }
         }
@@ -292,7 +292,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.TagVersion);
             }
-            internal set {
+             set {
                 AddAttribute(Iso19770_2.Attributes.TagVersion, value);
             }
         }
@@ -301,7 +301,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.TagId);
             }
-            internal set {
+             set {
                 AddAttribute(Iso19770_2.Attributes.TagId, value);
             }
         }
@@ -310,7 +310,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Patch).IsTruePreserveNull();
             }
-            internal set {
+             set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Patch, value.ToString());
                 }
@@ -321,7 +321,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Supplemental).IsTruePreserveNull();
             }
-            internal set {
+             set {
                 if (value != null) {
                     AddAttribute(Iso19770_2.Attributes.Supplemental, value.ToString());
                 }
@@ -332,7 +332,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             get {
                 return GetAttribute(Iso19770_2.Attributes.Media);
             }
-            internal set {
+             set {
                 AddAttribute(Iso19770_2.Attributes.Media, value);
             }
         }
@@ -347,7 +347,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             }
         }
 
-        internal SoftwareMetadata AddMeta() {
+        public SoftwareMetadata AddMeta() {
             return AddElement(new SoftwareMetadata());
         }
 
@@ -357,7 +357,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             }
         }
 
-        internal Link AddLink(Uri referenceUri, string relationship) {
+        public Link AddLink(Uri referenceUri, string relationship) {
             return AddElement(new Link(referenceUri, relationship));
         }
 
@@ -367,7 +367,7 @@ namespace Microsoft.PackageManagement.SwidTag {
             }
         }
 
-        internal Entity AddEntity(string name, string regId, string role) {
+        public Entity AddEntity(string name, string regId, string role) {
             return AddElement(new Entity(name, regId, role));
         }
 
@@ -397,7 +397,7 @@ namespace Microsoft.PackageManagement.SwidTag {
         ///     Adds a Payload resource collection element.
         /// </summary>
         /// <returns>The ResourceCollection added. If the Payload already exists, returns the current Payload.</returns>
-        internal Payload AddPayload() {
+        public Payload AddPayload() {
             // should we just detect and add the evidence element when a provider is adding items to the evidence
             // instead of requiring someone to explicity add the element?
             if (Element.Elements(Iso19770_2.Elements.Payload).Any()) {
@@ -427,7 +427,7 @@ namespace Microsoft.PackageManagement.SwidTag {
         ///     Adds an Evidence element.
         /// </summary>
         /// <returns>The added Evidence element. If the Evidence element already exists, returns the current element.</returns>
-        internal Evidence AddEvidence() {
+        public Evidence AddEvidence() {
             // should we just detect and add the evidence element when a provider is adding items to the evidence
             // instead of requiring someone to explicity add the element?
             if (Element.Elements(Iso19770_2.Elements.Evidence).Any()) {

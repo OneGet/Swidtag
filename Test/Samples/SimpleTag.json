@@ -1,5 +1,5 @@
 ﻿{
-    "@context": {
+     "@context": {
         "swid": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd#",
         "discovery": "http://packagemanagement.org/discovery#",
         "install": "http://packagemanagement.org/installation#",
@@ -21,13 +21,14 @@
         "tagId": { "@id": "swid:tagId", "@type": "xs:string" },
         "patch": { "@id": "swid:patch", "@type": "xs:boolean" },
         "link": { "@id": "swid:Link", "@container": "@index" },
-            "href": { "@id": "swid:href", "@type": "@id" },
-            "rel": { "@id": "swid:rel", "@type": "xs:string" },
-            "artifact": { "@id": "swid:artifact", "@type": "xs:string" },
-            "own": { "@id": "swid:ownership", "@type": "xs:string" },
-            "req": { "@id": "swid:required", "@type": "xs:boolean" },
-            "type": { "@id": "swid:type", "@type": "xs:string" },
-            "use": { "@id": "swid:use", "@type": "xs:string" },
+        "Link": { "@id": "swid:Link", "@container": "@index" },
+        "href": { "@id": "swid:href", "@type": "@id" },
+        "rel": { "@id": "swid:rel", "@type": "xs:string" },
+        "artifact": { "@id": "swid:artifact", "@type": "xs:string" },
+        "own": { "@id": "swid:ownership", "@type": "xs:string" },
+        "req": { "@id": "swid:required", "@type": "xs:boolean" },
+        "type": { "@id": "swid:type", "@type": "xs:string" },
+        "use": { "@id": "swid:use", "@type": "xs:string" },
 
         "min-version": { "@id": "discovery:min-version", "@type": "xs:string" },
         "max-version": { "@id": "discovery:max-version", "@type": "xs:string" },
@@ -40,26 +41,28 @@
         "type": { "@id": "discovery:type", "@type": "xs:string" },
         "latest": { "@id": "discovery:latest", "@type": "xs:boolean" },
 
-        "script" :  {"@id": "install:install-script", "@type": "xs:string" },
-        "args" :  {"@id": "install:install-arguments", "@type": "xs:string" },
+        "script": { "@id": "install:install-script", "@type": "xs:string" },
+        "args": { "@id": "install:install-arguments", "@type": "xs:string" },
 
-        "meta": { "@id": "swid:Meta", "@container": "@index" }
-        
+        "meta": { "@id": "swid:Meta", "@container": "@index" },
+        "Meta": { "@id": "swid:Meta", "@container": "@index" }
+
+    
     },
 
-    "uniqueId": "nuget.2.8.5.101",
-    "name": "nuget",
-    "version": "2.8.5.101",
 
-    "link": {
-      "http://adobe.com/photoshop/photoshop.feed.swidtag": { "rel": "feed", "artifact":"foo", "latest": "true" , "args":  "/s", "script": "#foo", "media":"(x86)"},
-      "http://other" : { "rel": "package","artifact":"foo"  }
+
+    "Link": {
+        "https://github.com/robmen/gitsetup/releases/download/v1.9.4.40929/gitsetup.exe": {
+            "rel": "installationmedia"
+        }
     },
-  
-    "meta": {
-      "summary": "this is a test" ,
-      "abcdefg": "someother" 
-	}
-
+    "Meta": {
+        "keyword": "git msysgit dvcs",
+        "title": "Git on Windows"
+    },
+    "name": "git",
+    "tagId": "https://github.com/robmen/gitsetup",
+    "version": "1.9.4.40929"
 
 }

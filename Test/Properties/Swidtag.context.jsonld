@@ -21,13 +21,14 @@
         "tagId": { "@id": "swid:tagId", "@type": "xs:string" },
         "patch": { "@id": "swid:patch", "@type": "xs:boolean" },
         "link": { "@id": "swid:Link", "@container": "@index" },
-            "href": { "@id": "swid:href", "@type": "@id" },
-            "rel": { "@id": "swid:rel", "@type": "xs:string" },
-            "artifact": { "@id": "swid:artifact", "@type": "xs:string" },
-            "own": { "@id": "swid:ownership", "@type": "xs:string" },
-            "req": { "@id": "swid:required", "@type": "xs:boolean" },
-            "type": { "@id": "swid:type", "@type": "xs:string" },
-            "use": { "@id": "swid:use", "@type": "xs:string" },
+        "Link": { "@id": "swid:Link", "@container": "@index" },
+        "href": { "@id": "swid:href", "@type": "@id" },
+        "rel": { "@id": "swid:rel", "@type": "xs:string" },
+        "artifact": { "@id": "swid:artifact", "@type": "xs:string" },
+        "own": { "@id": "swid:ownership", "@type": "xs:string" },
+        "req": { "@id": "swid:required", "@type": "xs:boolean" },
+        "type": { "@id": "swid:type", "@type": "xs:string" },
+        "use": { "@id": "swid:use", "@type": "xs:string" },
 
         "min-version": { "@id": "discovery:min-version", "@type": "xs:string" },
         "max-version": { "@id": "discovery:max-version", "@type": "xs:string" },
@@ -40,10 +41,11 @@
         "type": { "@id": "discovery:type", "@type": "xs:string" },
         "latest": { "@id": "discovery:latest", "@type": "xs:boolean" },
 
-        "script" :  {"@id": "install:install-script", "@type": "xs:string" },
-        "args" :  {"@id": "install:install-arguments", "@type": "xs:string" },
+        "script": { "@id": "install:install-script", "@type": "xs:string" },
+        "args": { "@id": "install:install-arguments", "@type": "xs:string" },
 
-        "meta": { "@id": "swid:Meta", "@container": "@index" }
-        
+        "meta": { "@id": "swid:Meta", "@container": "@index" },
+        "Meta": { "@id": "swid:Meta", "@container": "@index" }
+
     }
 }
