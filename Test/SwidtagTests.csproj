@@ -110,9 +110,7 @@
     <None Include="Samples\SimpleTag.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Samples\Swidtag.context.jsonld">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <EmbeddedResource Include="Properties\Swidtag.context.jsonld" />
     <None Include="Samples\tersetag.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

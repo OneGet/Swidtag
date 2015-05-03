@@ -16,11 +16,9 @@ namespace Microsoft.PackageManagement.SwidTag {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel.Design.Serialization;
     using System.IO;
-    using System.IO.IsolatedStorage;
     using System.Linq;
-    using System.Security.Policy;
+    using System.Reflection;
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
@@ -29,14 +27,15 @@ namespace Microsoft.PackageManagement.SwidTag {
     using Newtonsoft.Json.Linq;
     using Sgml;
     using Utility;
+    using Formatting = Newtonsoft.Json.Formatting;
 
     public class Swidtag : BaseElement {
-        private static JsonLdOptions _options = new JsonLdOptions() {
+        private static readonly JsonLdOptions _options = new JsonLdOptions() {
             useNamespaces = true,
             documentLoader = new ContextDownloader(),
         };
 
-        private static JToken _context = JToken.ReadFrom(new JsonTextReader(new StringReader(System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld"))));
+        private static JToken _context = JToken.ReadFrom(new JsonTextReader(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Microsoft.PackageManagement.SwidTag.Properties.Swidtag.context.jsonld"))));
         private readonly XDocument _swidTag;
 
         public Swidtag(XDocument document)
@@ -65,17 +64,15 @@ namespace Microsoft.PackageManagement.SwidTag {
                     foreach (var attr in element.Attributes().Where(attr => !attr.IsNamespaceDeclaration)) {
                         result.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
                     }
-                    
-                    
+
                     if (Links.Any()) {
                         var lnk = new JObject();
-                        
+
                         foreach (var link in Links) {
                             var each = new JObject();
-                            foreach (var attr in link.Element.Attributes().Where( attr => attr.Name != Iso19770_2.Attributes.HRef )) {
+                            foreach (var attr in link.Element.Attributes().Where(attr => attr.Name != Iso19770_2.Attributes.HRef)) {
                                 each.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
                             }
-
                             lnk.Add(link.HRef.ToString(), each);
                         }
                         result.Add(Iso19770_2.Elements.Link.ToJsonId(), lnk);
@@ -83,23 +80,18 @@ namespace Microsoft.PackageManagement.SwidTag {
 
                     if (Meta.Any()) {
                         var meta = new JObject();
-
-                        foreach (var m in Meta) {
-                            foreach (var attr in m.Element.Attributes()) {
-                                meta.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
-                            }
+                        foreach (var attr in Meta.SelectMany(m => m.Element.Attributes())) {
+                            meta.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
                         }
-                        
-                        result.Add(Iso19770_2.Elements.Meta.ToJsonId(), meta );
+                        result.Add(Iso19770_2.Elements.Meta.ToJsonId(), meta);
                     }
                     // return result.ToString();
-                    var doc = SetStandardContext(Compact(result)).ToString();
+                    var doc = SetStandardContext(Compact(result)).ToString(Formatting.None);
                     return doc.Replace(@"""discovery:", @"""")
-                    .Replace(@"""swid:", @"""")
-                    .Replace(@"""install:", @"""");
-                    //return Compact(result).ToString();
+                        .Replace(@"""swid:", @"""")
+                        .Replace(@"""install:", @"""");
                 }
-                
+
                 return null;
             }
         }

@@ -84,20 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Properties\Swidtag.context.jsonld" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <UsingTask TaskName="PowerShell" TaskFactory="CodeTaskFactory" AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll">
-    <ParameterGroup>
-      <ScriptBlock ParameterType="System.String" Required="true" />
-    </ParameterGroup>
-    <Task>
-      <Reference Include="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v12.0.dll" />
-      <Code Type="Class" Language="cs"><![CDATA[
-    public class PowerShell : Microsoft.Build.Tasks.Exec {
-        public string ScriptBlock {set { EchoOff=true; Command = string.Format( "@powershell \"Invoke-Command -ScriptBlock {{ $errorActionPreference='Stop'; {0} ; exit $LASTEXITCODE }} \"",  value.Replace("\"","\\\"").Replace("\r\n",";").Replace("\n",";").Replace("\r",";")); } }
-    }]]></Code>
-    </Task>
-  </UsingTask>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -14,18 +14,16 @@
 
 namespace Microsoft.PackageManagement.SwidTag {
     using System.IO;
+    using System.Reflection;
     using JsonLD.Core;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
 
     public class ContextDownloader : DocumentLoader {
+        private static readonly JToken _context = JToken.ReadFrom(new JsonTextReader(new StreamReader(Assembly.GetExecutingAssembly().GetManifestResourceStream("Microsoft.PackageManagement.SwidTag.Properties.Swidtag.context.jsonld"))));
         public override RemoteDocument LoadDocument(string url) {
-            if (url == "http://packagemanagement.org/discovery/Meta") {
-                var c = System.IO.File.ReadAllText("Samples\\Meta.context.jsonld");
-                return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(c))));
-            }
-            var context = System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld");
-            return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(context))));
+
+            return new RemoteDocument(url, _context);
         }
     }
 }
