@@ -75,6 +75,7 @@
     <Compile Include="Swidtag.cs" />
     <Compile Include="Utility\CollectionExtensions.cs" />
     <Compile Include="Utility\EnumerableExtensions.cs" />
+    <Compile Include="Utility\ExceptionExtensionscs.cs" />
     <Compile Include="Utility\MutableEnumerable.cs" />
     <Compile Include="Utility\ReEnumerable.cs" />
     <Compile Include="Utility\StringExtensions.cs" />

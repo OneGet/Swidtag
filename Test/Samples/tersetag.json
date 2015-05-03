@@ -1,0 +1,11 @@
+﻿{
+  "n": "nuget",
+  "u": "nuget.2.8.5.101",
+    "v": "2.8.5.101",
+    "extra": "100",
+  "@context": {
+    "u": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd/uniqueId",
+    "n": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd/name",
+    "v": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd/version"
+  }
+}

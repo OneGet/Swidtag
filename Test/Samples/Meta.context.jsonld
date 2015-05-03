@@ -1,0 +1,7 @@
+﻿{
+    "@context": {
+        "providerName": { "@id": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd#providerName", "@type": "xsd:string" },
+        "providerVersion": { "@id": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd#providerVersion", "@type": "xsd:string" },
+        "summary": { "@id": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd#summary", "@type": "xsd:string" },
+    }
+}

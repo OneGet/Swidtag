@@ -16,25 +16,37 @@ namespace Microsoft.PackageManagement.SwidTag {
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel.Design;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
+    using JsonLD.Core;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Linq;
     using Utility;
 
     public class Swidtag : BaseElement {
         private readonly XDocument _swidTag;
+        private static JsonLdOptions _options = new JsonLdOptions() {
+            useNamespaces = true,
+            documentLoader = new xxx(),
+        };
+
+        private static JToken _context = JToken.ReadFrom(new JsonTextReader(new StringReader(System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld"))));
 
         public Swidtag(XDocument document)
             : base(document.Root) {
             _swidTag = document;
+            _swidTag.Root.SetAttributeValue(Iso19770_2.Discovery.NamespaceDeclaration, Iso19770_2.Namespace.Discovery.NamespaceName);
         }
 
         public Swidtag()
             : this(new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement(Iso19770_2.Elements.SoftwareIdentity))) {
+            
         }
 
         public Swidtag(XElement xmlDocument)
@@ -44,85 +56,135 @@ namespace Microsoft.PackageManagement.SwidTag {
         }
 
         public static Swidtag LoadXml(string swidTagXml) {
+            try {
+                using (var reader = XmlReader.Create(new StringReader(swidTagXml), new XmlReaderSettings())) {
+                    var document = XDocument.Load(reader);
+                    if (IsSwidtag(document.Root)) {
+                        return new Swidtag(document);
+                    }
+                }
+            } catch(Exception e ) {
+                e.Dump();
+            }
             return null;
         }
 
+
+
         public static Swidtag LoadJson(string swidTagJson) {
-            return null;
+
+            var src = JToken.ReadFrom(new JsonTextReader(new StringReader(swidTagJson)));
+
+            var swidTag = new Swidtag {
+            };
+            Meta meta = null;
+            
+
+            // first, compact it to the canonical context
+            var doc2 = JsonLdProcessor.Compact(src, _context, _options);
+
+            // then, expand it out so we can walk it with strong types
+            var expandedDocument = JsonLdProcessor.Expand(src, _options).FirstOrDefault().ToJObject();
+
+            expandedDocument.Remove("@context");
+            expandedDocument.Add("@context", JToken.FromObject("http://packagemanagement.org/discovery"));
+
+            var ns1 = Iso19770_2.Namespace.Iso19770_2.ToString() + "#" + Iso19770_2.Attributes.TagId.LocalName;
+
+            foreach (var member in expandedDocument) {
+                var memberName = member.Key;
+                if (member.Value.Type == JTokenType.Array) {
+                    foreach (var element in member.Value.Cast<JObject>()) {
+                        var index = element.Index();
+                        var value = element.Val();
+
+                        if (index != null) {
+                            if (value != null) {
+                                if (memberName == Iso19770_2.JSonMembers.Meta) {
+                                    meta = meta ?? swidTag.AddMeta();
+                                    meta.AddAttribute(index, value);
+                                }
+                            } else {
+                                if (memberName == Iso19770_2.JSonMembers.Link) {
+                                    try {
+                                        var href = new Uri(index);
+                                        var relationship = element.PropertyValue(Iso19770_2.JSonMembers.Relationship);
+                                        var link = swidTag.AddLink(href, relationship);
+                                        foreach (var property in element.Properties().Where(each => each.Name != "@index" && each.Name != Iso19770_2.JSonMembers.Relationship)) {
+                                            link.AddAttribute(property.Name.ToXName(), property.PropertyValue());
+                                        }
+                                    } catch  {
+                                    }
+                                }
+                            }
+                        } else {
+                            swidTag.AddAttribute(memberName.ToXName(), value);
+                        }
+                    }
+                    continue;
+                }
+                
+                Console.WriteLine("'{0}' -- '{1}'", memberName, member.Value.Type);
+            }
+            return swidTag;
+        }
+
+        public string SwidTagJson {
+            get {
+                JObject result = new JObject();
+                return result.ToString();
+            }
         }
 
         public static Swidtag LoadHtml(string swidTagHtml) {
-            var reader = new Sgml.SgmlReader { 
-               DocType = "HTML", 
-               WhitespaceHandling = WhitespaceHandling.All, 
-               StripDocType = true, 
-               InputStream = new StringReader(swidTagHtml), 
-               CaseFolding = Sgml.CaseFolding.ToLower 
-           };
+            try {
+                using (var reader = new Sgml.SgmlReader {
+                    DocType = "HTML",
+                    WhitespaceHandling = WhitespaceHandling.All,
+                    StripDocType = true,
+                    InputStream = new StringReader(swidTagHtml),
+                    CaseFolding = Sgml.CaseFolding.ToLower
+                }) {
+                    var document = XDocument.Load(reader);
 
-            reader.Read();
-            while (!reader.EOF) {
-                // HTML loader supports <Link> tags in the <head>
-                
+                    if (document.Root != null && document.Root.Name.LocalName == "html") {
+                        var swidTag = new Swidtag {
+                            Name = "Anonymous",
+                            Version = "1.0",
+                            VersionScheme = Iso19770_2.VersionScheme.MultipartNumeric
+                        };
+
+                        
+
+                        var html = document.Root;
+                        var ns = html.Name.Namespace;
+
+                        var head = html.Element(ns + "head");
+                        if (head != null) {
+                            var links = head.Elements(ns + "link");
+
+                            foreach (var link in links) {
+                                var href = link.Attribute("href");
+                                var rel = link.Attribute("rel");
+
+                                if (href != null && rel != null) {
+                                    var l = swidTag.AddLink(new Uri(href.Value), rel.Value);
+                                    foreach (var attr in link.Attributes()) {
+                                        l.AddAttribute(attr.Name, attr.Value);
+                                    }
+                                }
+                            }
+                        }
+                        return swidTag;
+                    }
+                }
+            } catch (Exception e) {
+                e.Dump();
             }
             return null;
         }
 
-
-        private static bool AdvanceToElement(Sgml.SgmlReader reader, string elementName) {
-            while (!reader.EOF && ( reader.NodeType != XmlNodeType.Element || reader.Name != elementName)) {
-                reader.Read();
-            }
-            return !reader.EOF;
-        }
-
-        public static IEnumerable<string> testing(string swidTagHtml) {
-            using (var reader = new Sgml.SgmlReader {
-                DocType = "HTML",
-                WhitespaceHandling = WhitespaceHandling.All,
-                StripDocType = true,
-                InputStream = new StringReader(swidTagHtml),
-                CaseFolding = Sgml.CaseFolding.ToLower
-            }) {
-                var document = XDocument.Load(reader);
-
-                var swidTag = new Swidtag {
-                    Name = "Anonymous",
-                    Version = "1.0",
-                    VersionScheme = Iso19770_2.VersionScheme.MultipartNumeric
-                };
-
-                if (document.Root != null) {
-                    var html = document.Root;
-                    var ns = html.Name.Namespace;
-
-                    var head = html.Element(ns + "head");
-                    if (head != null) {
-                        var links = head.Elements(ns + "link");
-
-                        foreach (var link in links) {
-                            var href = link.Attribute( "href");
-                            var rel = link.Attribute("rel");
-
-                            if (href != null && rel != null) {
-                                var l = swidTag.AddLink(new Uri(href.Value), rel.Value);
-                                foreach (var attr in link.Attributes()) {
-                                    l.AddAttribute(attr.Name, attr.Value);
-
-                                }
-                            }
-                            
-                           //  yield return link.Name.ToString();
-                        }
-
-
-                    }
-                }
-                yield return swidTag.SwidTagXml;
-            }
-            
-        }
-
+        
         public string SwidTagXml {
             get {
                 var stringBuilder = new StringBuilder();
@@ -339,5 +401,67 @@ namespace Microsoft.PackageManagement.SwidTag {
         }
 
         #endregion
+    }
+
+    public class xxx : DocumentLoader {
+        public override RemoteDocument LoadDocument(string url) {
+            if (url == "http://packagemanagement.org/discovery/Meta") {
+                var c = System.IO.File.ReadAllText("Samples\\Meta.context.jsonld");
+                return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(c))));
+            }
+            var context = System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld");
+            return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(context))));
+        }
+    }
+
+
+    public static class jsonextensions {
+        public static JObject ToJObject(this JToken token) {
+            return JObject.Parse((token ?? "{}").ToString());
+        }
+
+        public static string PropertyValue(this JProperty property) {
+            var value = property.Value;
+            
+            switch (property.Value.Type) {
+                case JTokenType.Array:
+                    return value.FirstOrDefault().ToJObject()["@value"].Value<string>();
+                    
+                default:
+                    return value.Value<string>();
+            }
+        }
+
+        public static string PropertyValue(this JObject obj, string prop) {
+            var i = obj[prop];
+            if (i != null) {
+                switch (i.Type) {
+                    case JTokenType.Array:
+                        return i.FirstOrDefault().ToJObject()["@value"].Value<string>();
+
+                    default:
+                        return i.Value<string>();
+                }
+                
+            }
+            return null;
+        }
+
+        public static string Index(this JObject obj) {
+            return obj.PropertyValue("@index");
+        }
+        public static string Val(this JObject obj) {
+            return obj.PropertyValue("@value");
+        }
+        public static string Type(this JObject obj) {
+            return obj.PropertyValue("@type");
+        }
+        public static string ToJsonId(this XName name) {
+            return name.Namespace.ToString() + "#" + name.LocalName.ToString();
+        }
+
+        public static XName ToXName(this string name) {
+            return (XNamespace)name.Substring(0, name.IndexOf("#")) + name.Substring(name.LastIndexOf("#") + 1);
+        }
     }
 }
