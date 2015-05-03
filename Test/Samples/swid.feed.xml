@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<SoftwareIdentity versionScheme="multipartnumeric" version="1.15.122.18327" uniqueId="OneGet.Providers.4" tagVersion="1" name="OneGet.Providers" media="(OS:windows)" patch="false" xmlns:discovery="http://packagemanagement.org/discovery" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://standards.iso.org/iso/19770/-2/2015/schema.xsd">
+
+  <!-- This swidtag is a Discovery Feed that has pointers to the SWIDTAGs for the providers that the bootstrapper can download. -->
+  <Link discovery:version="2.8.5.101" discovery:name="nuget" media="(OS:windows)" discovery:latest="true" rel="package" type="application/swid-tag+xml" href="https://oneget.org/nuget-2.8.5.101.package.swidtag"/>
+  <Link discovery:version="2.8.5.101" discovery:name="chocolatey" media="(OS:windows)" discovery:latest="true" rel="package" type="application/swid-tag+xml" href="https://oneget.org/chocolatey-2.8.5.101.package.swidtag"/>
+  <Link discovery:name="nuget" media="(OS:windows)" rel="feed" type="application/swid-tag+xml" href="https://oneget.org/nuget.feed.swidtag"/>
+  <Link discovery:name="chocolatey" media="(OS:windows)" rel="feed" type="application/swid-tag+xml" href="https://oneget.org/chocolatey.feed.swidtag"/>
+
+</SoftwareIdentity>

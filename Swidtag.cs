@@ -87,9 +87,9 @@ namespace Microsoft.PackageManagement.SwidTag {
                     }
                     // return result.ToString();
                     var doc = SetStandardContext(Compact(result)).ToString(Formatting.Indented);
-                    return doc.Replace(@"""discovery:", @"""")
-                        .Replace(@"""swid:", @"""")
-                        .Replace(@"""install:", @"""");
+                    return doc.Replace(@"""swid:", @"""");
+                    //.Replace(@"""discovery:", @"""")
+                    //.Replace(@"""install:", @"""");
                 }
 
                 return null;
@@ -152,46 +152,50 @@ namespace Microsoft.PackageManagement.SwidTag {
         }
 
         public static Swidtag LoadJson(string swidTagJson) {
-            var swidTag = new Swidtag();
-            Meta meta = null;
+            try {
+                var swidTag = new Swidtag();
+                Meta meta = null;
 
-            var expanded = Normalize(swidTagJson);
+                var expanded = Normalize(swidTagJson);
 
-            foreach (var member in expanded) {
-                var memberName = member.Key;
-                if (member.Value.Type == JTokenType.Array) {
-                    foreach (var element in member.Value.Cast<JObject>()) {
-                        var index = element.Index();
-                        var value = element.Val();
+                foreach (var member in expanded) {
+                    var memberName = member.Key;
+                    if (member.Value.Type == JTokenType.Array) {
+                        foreach (var element in member.Value.Cast<JObject>()) {
+                            var index = element.Index();
+                            var value = element.Val();
 
-                        if (index != null) {
-                            if (value != null) {
-                                if (memberName == Iso19770_2.JSonMembers.Meta) {
-                                    meta = meta ?? swidTag.AddMeta();
-                                    meta.AddAttribute(index, value);
-                                }
-                            } else {
-                                if (memberName == Iso19770_2.JSonMembers.Link) {
-                                    try {
-                                        var href = new Uri(index);
-                                        var relationship = element.PropertyValue(Iso19770_2.JSonMembers.Relationship);
-                                        var link = swidTag.AddLink(href, relationship);
-                                        foreach (var property in element.Properties().Where(each => each.Name != "@index" && each.Name != Iso19770_2.JSonMembers.Relationship)) {
-                                            link.AddAttribute(property.Name.ToXName(), property.PropertyValue());
+                            if (index != null) {
+                                if (value != null) {
+                                    if (memberName == Iso19770_2.JSonMembers.Meta) {
+                                        meta = meta ?? swidTag.AddMeta();
+                                        meta.AddAttribute(index, value);
+                                    }
+                                } else {
+                                    if (memberName == Iso19770_2.JSonMembers.Link) {
+                                        try {
+                                            var href = new Uri(index);
+                                            var relationship = element.PropertyValue(Iso19770_2.JSonMembers.Relationship);
+                                            var link = swidTag.AddLink(href, relationship);
+                                            foreach (var property in element.Properties().Where(each => each.Name != "@index" && each.Name != Iso19770_2.JSonMembers.Relationship)) {
+                                                link.AddAttribute(property.Name.ToXName(), property.PropertyValue());
+                                            }
+                                        } catch {
                                         }
-                                    } catch {
                                     }
                                 }
+                            } else {
+                                swidTag.AddAttribute(memberName.ToXName(), value);
                             }
-                        } else {
-                            swidTag.AddAttribute(memberName.ToXName(), value);
                         }
+                        continue;
                     }
-                    continue;
+                    // Console.WriteLine("'{0}' -- '{1}'", memberName, member.Value.Type);
                 }
-                // Console.WriteLine("'{0}' -- '{1}'", memberName, member.Value.Type);
+                return swidTag;
+            } catch {
+                return null;
             }
-            return swidTag;
         }
 
         public static Swidtag LoadHtml(string swidTagHtml) {
@@ -354,6 +358,17 @@ namespace Microsoft.PackageManagement.SwidTag {
         public IEnumerable<Link> Links {
             get {
                 return Element.Elements(Iso19770_2.Elements.Link).Select(each => new Link(each)).ReEnumerable();
+            }
+        }
+
+        public void RemoveLink(Uri referenceUri) {
+            var elements = Element.Elements(Iso19770_2.Elements.Link).ToArray();
+                
+            foreach (var element in elements) {
+                var href = element.GetAttribute(Iso19770_2.Attributes.HRef);
+                if (href != null && href == referenceUri.AbsoluteUri) {
+                    element.Remove();
+                }
             }
         }
 

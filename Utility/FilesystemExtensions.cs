@@ -18,6 +18,7 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
 
     public static class FilesystemExtensions {
@@ -25,6 +26,34 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
         private static int _counter = Process.GetCurrentProcess().Id << 16;
         public static readonly string OriginalTempFolder;
         public static string TempPath {get; private set;}
+
+        static FilesystemExtensions() {
+            OriginalTempFolder = OriginalTempFolder ?? Path.GetTempPath();
+            ResetTempFolder();
+        }
+
+        public static void ResetTempFolder() {
+            // set the temporary folder to be a child of the User temporary folder
+            // based on the application name
+            var appName = (Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly()).GetName().Name;
+            if (OriginalTempFolder.IndexOf(appName, StringComparison.CurrentCultureIgnoreCase) == -1) {
+                var appTempPath = Path.Combine(OriginalTempFolder, appName);
+                if (!Directory.Exists(appTempPath)) {
+                    Directory.CreateDirectory(appTempPath);
+                }
+
+                TempPath = Path.Combine(appTempPath, (Directory.EnumerateDirectories(appTempPath).Count() + 1).ToString(CultureInfo.CurrentCulture));
+                if (!Directory.Exists(TempPath)) {
+                    Directory.CreateDirectory(TempPath);
+                }
+
+                // make sure this temp directory gets marked for eventual cleanup.
+                MoveFileOverwrite(appTempPath, null);
+                MoveFileAtNextBoot(TempPath, null);
+            }
+
+            TempPath = TempPath ?? OriginalTempFolder;
+        }
 
         public static int Counter {
             get {
@@ -109,7 +138,7 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
                 ext = ".tmp";
             }
             if (string.IsNullOrWhiteSpace(folder)) {
-                folder = TempPath;
+                folder = OriginalTempFolder;
             }
 
             name = Path.Combine(folder, "tmpFile." + CounterHex + (string.IsNullOrWhiteSpace(name) ? ext : "." + name + ext));

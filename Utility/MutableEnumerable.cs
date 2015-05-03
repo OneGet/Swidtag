@@ -16,7 +16,7 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
     using System.Collections;
     using System.Collections.Generic;
 
-    internal abstract class MutableEnumerable<T> : IEnumerable<T> {
+    public abstract class MutableEnumerable<T> : IEnumerable<T> {
         private List<T> _list;
 
         protected List<T> List {

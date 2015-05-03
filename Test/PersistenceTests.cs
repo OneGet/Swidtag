@@ -14,6 +14,8 @@
 
 namespace Microsoft.PackageManagement.SwidTag.Test {
     using System.IO;
+    using System.Linq;
+    using System.Windows.Forms;
     using Support;
     using Xunit;
     using Xunit.Abstractions;
@@ -43,5 +45,27 @@ namespace Microsoft.PackageManagement.SwidTag.Test {
         }
 
 
+        [Fact]
+        public void RemoveLinkTest() {
+            using (CaptureConsole) {
+                var tag = Swidtag.LoadXml(File.ReadAllText("Samples\\swid.feed.xml"));
+                
+                Console.WriteLine(tag.SwidTagXml);
+                tag.RemoveLink(tag.Links.FirstOrDefault().HRef);
+                Console.WriteLine(tag.SwidTagXml);
+
+            }
+        }
+
+        [Fact]
+        public void XmlTest() {
+            using (CaptureConsole) {
+                var tag = Swidtag.LoadXml(File.ReadAllText("Samples\\swid.feed.xml"));
+                Assert.NotNull(tag);
+                Console.WriteLine(tag.SwidTagXml);
+                Console.WriteLine(tag.SwidTagJson);
+
+            }
+        }
     }
 }

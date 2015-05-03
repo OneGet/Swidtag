@@ -16,8 +16,9 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
 
-    internal static class EnumerableExtensions {
+    public  static class EnumerableExtensions {
         /// <summary>
         ///     Returns a ReEnumerable wrapper around the collection which timidly (cautiously) pulls items
         ///     but still allows you to to re-enumerate without re-running the query.
@@ -38,6 +39,38 @@ namespace Microsoft.PackageManagement.SwidTag.Utility {
                     onFilterAction(i);
                 } else {
                     yield return i;
+                }
+            }
+        }
+
+        public static void ParallelForEach<T>(this IEnumerable<T> enumerable, Action<T> action) {
+            var items = enumerable.ReEnumerable();
+            object first = items.FirstOrDefault();
+            if (first != null) {
+                object second = items.Skip(1).FirstOrDefault();
+                if (second != null) {
+                    Parallel.ForEach(items, new ParallelOptions {
+                        MaxDegreeOfParallelism = -1,
+                    }, action);
+                }
+                else {
+                    action(items.FirstOrDefault());
+                }
+            }
+        }
+
+        public static void SerialForEach<T>(this IEnumerable<T> enumerable, Action<T> action) {
+            var items = enumerable.ReEnumerable();
+            object first = items.FirstOrDefault();
+            if (first != null) {
+                object second = items.Skip(1).FirstOrDefault();
+                if (second != null) {
+                    foreach (var item in items) {
+                        action(item);
+                    }
+                }
+                else {
+                    action(items.FirstOrDefault());
                 }
             }
         }
