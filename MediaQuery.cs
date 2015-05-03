@@ -72,7 +72,7 @@ namespace Microsoft.PackageManagement.SwidTag {
           media="(windows)"
               // applies to only systems that identify themselves as 'Windows'
 
-          media="(windows) not (windows.architecture:x64)"
+          media="(windows) not (architecture:x64)"
               // applies to only systems that identify
               // themselves as windows and are not for an x64 cpu
 
