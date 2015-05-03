@@ -16,25 +16,28 @@ namespace Microsoft.PackageManagement.SwidTag {
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel.Design;
+    using System.ComponentModel.Design.Serialization;
     using System.IO;
+    using System.IO.IsolatedStorage;
     using System.Linq;
+    using System.Security.Policy;
     using System.Text;
     using System.Xml;
     using System.Xml.Linq;
     using JsonLD.Core;
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
+    using Sgml;
     using Utility;
 
     public class Swidtag : BaseElement {
-        private readonly XDocument _swidTag;
         private static JsonLdOptions _options = new JsonLdOptions() {
             useNamespaces = true,
-            documentLoader = new xxx(),
+            documentLoader = new ContextDownloader(),
         };
 
         private static JToken _context = JToken.ReadFrom(new JsonTextReader(new StringReader(System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld"))));
+        private readonly XDocument _swidTag;
 
         public Swidtag(XDocument document)
             : base(document.Root) {
@@ -46,13 +49,78 @@ namespace Microsoft.PackageManagement.SwidTag {
             : this(new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 new XElement(Iso19770_2.Elements.SoftwareIdentity))) {
-            
         }
 
         public Swidtag(XElement xmlDocument)
             : this(new XDocument(
                 new XDeclaration("1.0", "UTF-8", "yes"),
                 xmlDocument)) {
+        }
+
+        public string SwidTagJson {
+            get {
+                JObject result = SetStandardContext(new JObject());
+                var element = _swidTag.Root;
+                if (element != null) {
+                    foreach (var attr in element.Attributes().Where(attr => !attr.IsNamespaceDeclaration)) {
+                        result.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
+                    }
+                    
+                    
+                    if (Links.Any()) {
+                        var lnk = new JObject();
+                        
+                        foreach (var link in Links) {
+                            var each = new JObject();
+                            foreach (var attr in link.Element.Attributes().Where( attr => attr.Name != Iso19770_2.Attributes.HRef )) {
+                                each.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
+                            }
+
+                            lnk.Add(link.HRef.ToString(), each);
+                        }
+                        result.Add(Iso19770_2.Elements.Link.ToJsonId(), lnk);
+                    }
+
+                    if (Meta.Any()) {
+                        var meta = new JObject();
+
+                        foreach (var m in Meta) {
+                            foreach (var attr in m.Element.Attributes()) {
+                                meta.Add(attr.Name.ToJsonId(element.Name.Namespace), attr.Value);
+                            }
+                        }
+                        
+                        result.Add(Iso19770_2.Elements.Meta.ToJsonId(), meta );
+                    }
+                    // return result.ToString();
+                    var doc = SetStandardContext(Compact(result)).ToString();
+                    return doc.Replace(@"""discovery:", @"""")
+                    .Replace(@"""swid:", @"""")
+                    .Replace(@"""install:", @"""");
+                    //return Compact(result).ToString();
+                }
+                
+                return null;
+            }
+        }
+
+        public string SwidTagXml {
+            get {
+                var stringBuilder = new StringBuilder();
+
+                var settings = new XmlWriterSettings {
+                    OmitXmlDeclaration = false,
+                    Indent = true,
+                    NewLineOnAttributes = true,
+                    NamespaceHandling = NamespaceHandling.OmitDuplicates
+                };
+
+                using (var xmlWriter = XmlWriter.Create(stringBuilder, settings)) {
+                    _swidTag.Save(xmlWriter);
+                }
+
+                return stringBuilder.ToString();
+            }
         }
 
         public static Swidtag LoadXml(string swidTagXml) {
@@ -63,35 +131,41 @@ namespace Microsoft.PackageManagement.SwidTag {
                         return new Swidtag(document);
                     }
                 }
-            } catch(Exception e ) {
+            } catch (Exception e) {
                 e.Dump();
             }
             return null;
         }
 
+        internal static JObject Normalize(string swidTagText) {
+            return Expand(JToken.ReadFrom(new JsonTextReader(new StringReader(swidTagText))));
+        }
 
+        internal static JObject SetStandardContext(JObject obj) {
+            obj.Remove("@context");
+            obj.Add("@context", JToken.FromObject("http://packagemanagement.org/discovery"));
+            return obj;
+        }
+
+        internal static JObject Compact(JToken swidTag) {
+            // first, compact it to the canonical context
+            return JsonLdProcessor.Compact(swidTag, _context, _options);
+        }
+
+        internal static JObject Expand(JToken swidTag) {
+            // then, expand it out so we can walk it with strong types
+            var expanded = JsonLdProcessor.Expand(Compact(swidTag), _options).FirstOrDefault().ToJObject();
+
+            return SetStandardContext(expanded);
+        }
 
         public static Swidtag LoadJson(string swidTagJson) {
-
-            var src = JToken.ReadFrom(new JsonTextReader(new StringReader(swidTagJson)));
-
-            var swidTag = new Swidtag {
-            };
+            var swidTag = new Swidtag();
             Meta meta = null;
-            
 
-            // first, compact it to the canonical context
-            var doc2 = JsonLdProcessor.Compact(src, _context, _options);
+            var expanded = Normalize(swidTagJson);
 
-            // then, expand it out so we can walk it with strong types
-            var expandedDocument = JsonLdProcessor.Expand(src, _options).FirstOrDefault().ToJObject();
-
-            expandedDocument.Remove("@context");
-            expandedDocument.Add("@context", JToken.FromObject("http://packagemanagement.org/discovery"));
-
-            var ns1 = Iso19770_2.Namespace.Iso19770_2.ToString() + "#" + Iso19770_2.Attributes.TagId.LocalName;
-
-            foreach (var member in expandedDocument) {
+            foreach (var member in expanded) {
                 var memberName = member.Key;
                 if (member.Value.Type == JTokenType.Array) {
                     foreach (var element in member.Value.Cast<JObject>()) {
@@ -113,7 +187,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                                         foreach (var property in element.Properties().Where(each => each.Name != "@index" && each.Name != Iso19770_2.JSonMembers.Relationship)) {
                                             link.AddAttribute(property.Name.ToXName(), property.PropertyValue());
                                         }
-                                    } catch  {
+                                    } catch {
                                     }
                                 }
                             }
@@ -123,27 +197,19 @@ namespace Microsoft.PackageManagement.SwidTag {
                     }
                     continue;
                 }
-                
-                Console.WriteLine("'{0}' -- '{1}'", memberName, member.Value.Type);
+                // Console.WriteLine("'{0}' -- '{1}'", memberName, member.Value.Type);
             }
             return swidTag;
         }
 
-        public string SwidTagJson {
-            get {
-                JObject result = new JObject();
-                return result.ToString();
-            }
-        }
-
         public static Swidtag LoadHtml(string swidTagHtml) {
             try {
-                using (var reader = new Sgml.SgmlReader {
+                using (var reader = new SgmlReader {
                     DocType = "HTML",
                     WhitespaceHandling = WhitespaceHandling.All,
                     StripDocType = true,
                     InputStream = new StringReader(swidTagHtml),
-                    CaseFolding = Sgml.CaseFolding.ToLower
+                    CaseFolding = CaseFolding.ToLower
                 }) {
                     var document = XDocument.Load(reader);
 
@@ -153,8 +219,6 @@ namespace Microsoft.PackageManagement.SwidTag {
                             Version = "1.0",
                             VersionScheme = Iso19770_2.VersionScheme.MultipartNumeric
                         };
-
-                        
 
                         var html = document.Root;
                         var ns = html.Name.Namespace;
@@ -182,26 +246,6 @@ namespace Microsoft.PackageManagement.SwidTag {
                 e.Dump();
             }
             return null;
-        }
-
-        
-        public string SwidTagXml {
-            get {
-                var stringBuilder = new StringBuilder();
-
-                var settings = new XmlWriterSettings {
-                    OmitXmlDeclaration = false,
-                    Indent = true,
-                    NewLineOnAttributes = true,
-                    NamespaceHandling = NamespaceHandling.OmitDuplicates
-                };
-
-                using (var xmlWriter = XmlWriter.Create(stringBuilder, settings)) {
-                    _swidTag.Save(xmlWriter);
-                }
-
-                return stringBuilder.ToString();
-            }
         }
 
         public static bool IsSwidtag(XElement xmlDocument) {
@@ -401,67 +445,5 @@ namespace Microsoft.PackageManagement.SwidTag {
         }
 
         #endregion
-    }
-
-    public class xxx : DocumentLoader {
-        public override RemoteDocument LoadDocument(string url) {
-            if (url == "http://packagemanagement.org/discovery/Meta") {
-                var c = System.IO.File.ReadAllText("Samples\\Meta.context.jsonld");
-                return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(c))));
-            }
-            var context = System.IO.File.ReadAllText("Samples\\Swidtag.context.jsonld");
-            return new RemoteDocument(url, JToken.ReadFrom(new JsonTextReader(new StringReader(context))));
-        }
-    }
-
-
-    public static class jsonextensions {
-        public static JObject ToJObject(this JToken token) {
-            return JObject.Parse((token ?? "{}").ToString());
-        }
-
-        public static string PropertyValue(this JProperty property) {
-            var value = property.Value;
-            
-            switch (property.Value.Type) {
-                case JTokenType.Array:
-                    return value.FirstOrDefault().ToJObject()["@value"].Value<string>();
-                    
-                default:
-                    return value.Value<string>();
-            }
-        }
-
-        public static string PropertyValue(this JObject obj, string prop) {
-            var i = obj[prop];
-            if (i != null) {
-                switch (i.Type) {
-                    case JTokenType.Array:
-                        return i.FirstOrDefault().ToJObject()["@value"].Value<string>();
-
-                    default:
-                        return i.Value<string>();
-                }
-                
-            }
-            return null;
-        }
-
-        public static string Index(this JObject obj) {
-            return obj.PropertyValue("@index");
-        }
-        public static string Val(this JObject obj) {
-            return obj.PropertyValue("@value");
-        }
-        public static string Type(this JObject obj) {
-            return obj.PropertyValue("@type");
-        }
-        public static string ToJsonId(this XName name) {
-            return name.Namespace.ToString() + "#" + name.LocalName.ToString();
-        }
-
-        public static XName ToXName(this string name) {
-            return (XNamespace)name.Substring(0, name.IndexOf("#")) + name.Substring(name.LastIndexOf("#") + 1);
-        }
     }
 }

@@ -1,6 +1,9 @@
 ﻿{
-   "@context": {
+    "@context": {
         "swid": "http://standards.iso.org/iso/19770/-2/2015/schema.xsd#",
+        "discovery": "http://packagemanagement.org/discovery#",
+        "install": "http://packagemanagement.org/installation#",
+
         "xs": "http://www.w3.org/2001/XMLSchema#",
 
         "uniqueId": { "@id": "swid:tagId", "@type": "xs:string" },
@@ -25,8 +28,22 @@
             "req": { "@id": "swid:required", "@type": "xs:boolean" },
             "type": { "@id": "swid:type", "@type": "xs:string" },
             "use": { "@id": "swid:use", "@type": "xs:string" },
-        
+
+        "min-version": { "@id": "discovery:min-version", "@type": "xs:string" },
+        "max-version": { "@id": "discovery:max-version", "@type": "xs:string" },
+        "exact-version": { "@id": "discovery:version", "@type": "xs:string" },
+        "min-name": { "@id": "discovery:min-name", "@type": "xs:string" },
+        "max-name": { "@id": "discovery:max-name", "@type": "xs:string" },
+        "exact-name": { "@id": "discovery:name", "@type": "xs:string" },
+        "keyword": { "@id": "discovery:keyword", "@type": "xs:string" },
+        "target": { "@id": "discovery:targetFilename", "@type": "xs:string" },
+        "type": { "@id": "discovery:type", "@type": "xs:string" },
+        "latest": { "@id": "discovery:latest", "@type": "xs:boolean" },
+
+        "script" :  {"@id": "install:install-script", "@type": "xs:string" },
+        "args" :  {"@id": "install:install-arguments", "@type": "xs:string" },
 
         "meta": { "@id": "swid:Meta", "@container": "@index" }
+        
     }
 }

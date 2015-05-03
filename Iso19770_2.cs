@@ -14,13 +14,13 @@
 
 namespace Microsoft.PackageManagement.SwidTag {
     using System;
-    using System.ComponentModel.Design;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Xml.Linq;
     using Utility;
 
     public static class Iso19770_2 {
+        private static int _counter = 0;
+
         public static XAttribute SwidtagNamespace {
             get {
                 return new XAttribute(XNamespace.Xmlns + "swid", Namespace.Iso19770_2);
@@ -81,8 +81,6 @@ namespace Microsoft.PackageManagement.SwidTag {
             return element;
         }
 
-        private static int x = 0;
-
         public static void EnsureNamespaceAtTop(this XElement element, XNamespace ns) {
             if (string.IsNullOrEmpty(ns.NamespaceName)) {
                 return;
@@ -95,7 +93,7 @@ namespace Microsoft.PackageManagement.SwidTag {
                 if (element.Attributes().Any(each => each.Value == ns.NamespaceName)) {
                     return;
                 }
-                element.SetAttributeValue(Namespace.XmNs + ("pp" + (++x)), ns.NamespaceName);
+                element.SetAttributeValue(Namespace.XmNs + ("pp" + (++_counter)), ns.NamespaceName);
                 break;
             }
         }
@@ -147,7 +145,6 @@ namespace Microsoft.PackageManagement.SwidTag {
 
         public static class Discovery {
             public static readonly XName NamespaceDeclaration = Namespace.XmNs + "discovery";
-
             public static readonly XName Name = Namespace.Discovery + "name";
             // Feed Link Extended attributes: 
             public static readonly XName MinimumName = Namespace.Discovery + "min-name";
@@ -160,6 +157,13 @@ namespace Microsoft.PackageManagement.SwidTag {
             public static readonly XName Latest = Namespace.Discovery + "latest";
             public static readonly XName TargetFilename = Namespace.Discovery + "targetFilename";
             public static readonly XName Type = Namespace.Discovery + "type";
+        }
+
+        public static class Installation {
+            // Package Link Installer Attributes 
+            public static readonly XName InstallParameters = Namespace.Installation+ "install-parameters";
+            public static readonly XName InstallScript = Namespace.Installation + "install-script";
+
         }
 
         public static class MediaType {
@@ -220,6 +224,8 @@ namespace Microsoft.PackageManagement.SwidTag {
         public static class Namespace {
             public static readonly XNamespace Iso19770_2 = XNamespace.Get("http://standards.iso.org/iso/19770/-2/2015/schema.xsd");
             public static readonly XNamespace Discovery = XNamespace.Get("http://packagemanagement.org/discovery");
+            public static readonly XNamespace Installation = XNamespace.Get("http://packagemanagement.org/installation");
+
             public static readonly XNamespace OneGet = XNamespace.Get("http://oneget.org/packagemanagement");
             public static readonly XNamespace Xml = XNamespace.Get("http://www.w3.org/XML/1998/namespace");
             public static XNamespace XmlDsig = XNamespace.Get("http://www.w3.org/2000/09/xmldsig#");
@@ -254,49 +260,47 @@ namespace Microsoft.PackageManagement.SwidTag {
             public static readonly string File = Elements.File.ToJsonId();
             public static readonly string Process = Elements.Process.ToJsonId();
             public static readonly string Resource = Elements.Resource.ToJsonId();
-
-            public static readonly string Name = Namespace.Iso19770_2.ToString() + "#"+ "name";
-            public static readonly string Patch = Namespace.Iso19770_2.ToString() + "#"+  "patch";
-            public static readonly string Media = Namespace.Iso19770_2.ToString() + "#"+  "media";
-            public static readonly string Supplemental = Namespace.Iso19770_2.ToString() + "#"+  "supplemental";
-            public static readonly string TagVersion = Namespace.Iso19770_2.ToString() + "#"+  "tagVersion";
-            public static readonly string TagId = Namespace.Iso19770_2.ToString() + "#"+  "tagId";
-            public static readonly string Version = Namespace.Iso19770_2.ToString() + "#"+  "version";
-            public static readonly string VersionScheme = Namespace.Iso19770_2.ToString() + "#"+  "versionScheme";
-            public static readonly string Corpus = Namespace.Iso19770_2.ToString() + "#"+  "corpus";
-            public static readonly string Summary = Namespace.Iso19770_2.ToString() + "#"+  "summary";
-            public static readonly string Description = Namespace.Iso19770_2.ToString() + "#"+  "description";
-            public static readonly string ActivationStatus = Namespace.Iso19770_2.ToString() + "#"+  "activationStatus";
-            public static readonly string ChannelType = Namespace.Iso19770_2.ToString() + "#"+  "channelType";
-            public static readonly string ColloquialVersion = Namespace.Iso19770_2.ToString() + "#"+  "colloquialVersion";
-            public static readonly string Edition = Namespace.Iso19770_2.ToString() + "#"+  "edition";
-            public static readonly string EntitlementDataRequired = Namespace.Iso19770_2.ToString() + "#"+  "entitlementDataRequired";
-            public static readonly string EntitlementKey = Namespace.Iso19770_2.ToString() + "#"+  "entitlementKey";
-            public static readonly string Generator = Namespace.Iso19770_2.ToString() + "#"+  "generator";
-            public static readonly string PersistentId = Namespace.Iso19770_2.ToString() + "#"+  "persistentId";
-            public static readonly string Product = Namespace.Iso19770_2.ToString() + "#"+  "product";
-            public static readonly string ProductFamily = Namespace.Iso19770_2.ToString() + "#"+  "productFamily";
-            public static readonly string Revision = Namespace.Iso19770_2.ToString() + "#"+  "revision";
-            public static readonly string UnspscCode = Namespace.Iso19770_2.ToString() + "#"+  "unspscCode";
-            public static readonly string UnspscVersion = Namespace.Iso19770_2.ToString() + "#"+  "unspscVersion";
-            public static readonly string RegId = Namespace.Iso19770_2.ToString() + "#"+  "regId";
-            public static readonly string Role = Namespace.Iso19770_2.ToString() + "#"+  "role";
-            public static readonly string Thumbprint = Namespace.Iso19770_2.ToString() + "#"+  "thumbprint";
-            public static readonly string HRef = Namespace.Iso19770_2.ToString() + "#"+  "href";
-            public static readonly string Relationship = Namespace.Iso19770_2.ToString() + "#"+  "rel";
-            public static readonly string MediaType = Namespace.Iso19770_2.ToString() + "#"+  "type";
-            public static readonly string Ownership = Namespace.Iso19770_2.ToString() + "#"+  "ownership";
-            public static readonly string Use = Namespace.Iso19770_2.ToString() + "#"+  "use";
-            public static readonly string Artifact = Namespace.Iso19770_2.ToString() + "#"+  "artifact";
-            public static readonly string Type = Namespace.Iso19770_2.ToString() + "#"+  "type";
-            public static readonly string Key = Namespace.Iso19770_2.ToString() + "#"+  "key";
-            public static readonly string Root = Namespace.Iso19770_2.ToString() + "#"+  "root";
-            public static readonly string Location = Namespace.Iso19770_2.ToString() + "#"+  "location";
-            public static readonly string Size = Namespace.Iso19770_2.ToString() + "#"+  "size";
-            public static readonly string Pid = Namespace.Iso19770_2.ToString() + "#"+  "pid";
-            public static readonly string Date = Namespace.Iso19770_2.ToString() + "#"+  "date";
-            public static readonly string DeviceId = Namespace.Iso19770_2.ToString() + "#"+  "deviceId";
-
+            public static readonly string Name = Namespace.Iso19770_2.ToString() + "#" + "name";
+            public static readonly string Patch = Namespace.Iso19770_2.ToString() + "#" + "patch";
+            public static readonly string Media = Namespace.Iso19770_2.ToString() + "#" + "media";
+            public static readonly string Supplemental = Namespace.Iso19770_2.ToString() + "#" + "supplemental";
+            public static readonly string TagVersion = Namespace.Iso19770_2.ToString() + "#" + "tagVersion";
+            public static readonly string TagId = Namespace.Iso19770_2.ToString() + "#" + "tagId";
+            public static readonly string Version = Namespace.Iso19770_2.ToString() + "#" + "version";
+            public static readonly string VersionScheme = Namespace.Iso19770_2.ToString() + "#" + "versionScheme";
+            public static readonly string Corpus = Namespace.Iso19770_2.ToString() + "#" + "corpus";
+            public static readonly string Summary = Namespace.Iso19770_2.ToString() + "#" + "summary";
+            public static readonly string Description = Namespace.Iso19770_2.ToString() + "#" + "description";
+            public static readonly string ActivationStatus = Namespace.Iso19770_2.ToString() + "#" + "activationStatus";
+            public static readonly string ChannelType = Namespace.Iso19770_2.ToString() + "#" + "channelType";
+            public static readonly string ColloquialVersion = Namespace.Iso19770_2.ToString() + "#" + "colloquialVersion";
+            public static readonly string Edition = Namespace.Iso19770_2.ToString() + "#" + "edition";
+            public static readonly string EntitlementDataRequired = Namespace.Iso19770_2.ToString() + "#" + "entitlementDataRequired";
+            public static readonly string EntitlementKey = Namespace.Iso19770_2.ToString() + "#" + "entitlementKey";
+            public static readonly string Generator = Namespace.Iso19770_2.ToString() + "#" + "generator";
+            public static readonly string PersistentId = Namespace.Iso19770_2.ToString() + "#" + "persistentId";
+            public static readonly string Product = Namespace.Iso19770_2.ToString() + "#" + "product";
+            public static readonly string ProductFamily = Namespace.Iso19770_2.ToString() + "#" + "productFamily";
+            public static readonly string Revision = Namespace.Iso19770_2.ToString() + "#" + "revision";
+            public static readonly string UnspscCode = Namespace.Iso19770_2.ToString() + "#" + "unspscCode";
+            public static readonly string UnspscVersion = Namespace.Iso19770_2.ToString() + "#" + "unspscVersion";
+            public static readonly string RegId = Namespace.Iso19770_2.ToString() + "#" + "regId";
+            public static readonly string Role = Namespace.Iso19770_2.ToString() + "#" + "role";
+            public static readonly string Thumbprint = Namespace.Iso19770_2.ToString() + "#" + "thumbprint";
+            public static readonly string HRef = Namespace.Iso19770_2.ToString() + "#" + "href";
+            public static readonly string Relationship = Namespace.Iso19770_2.ToString() + "#" + "rel";
+            public static readonly string MediaType = Namespace.Iso19770_2.ToString() + "#" + "type";
+            public static readonly string Ownership = Namespace.Iso19770_2.ToString() + "#" + "ownership";
+            public static readonly string Use = Namespace.Iso19770_2.ToString() + "#" + "use";
+            public static readonly string Artifact = Namespace.Iso19770_2.ToString() + "#" + "artifact";
+            public static readonly string Type = Namespace.Iso19770_2.ToString() + "#" + "type";
+            public static readonly string Key = Namespace.Iso19770_2.ToString() + "#" + "key";
+            public static readonly string Root = Namespace.Iso19770_2.ToString() + "#" + "root";
+            public static readonly string Location = Namespace.Iso19770_2.ToString() + "#" + "location";
+            public static readonly string Size = Namespace.Iso19770_2.ToString() + "#" + "size";
+            public static readonly string Pid = Namespace.Iso19770_2.ToString() + "#" + "pid";
+            public static readonly string Date = Namespace.Iso19770_2.ToString() + "#" + "date";
+            public static readonly string DeviceId = Namespace.Iso19770_2.ToString() + "#" + "deviceId";
         }
     }
 }

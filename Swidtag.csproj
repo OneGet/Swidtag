@@ -54,12 +54,14 @@
   <ItemGroup>
     <Compile Include="AttributeIndexer.cs" />
     <Compile Include="BaseElement.cs" />
+    <Compile Include="ContextDownloader.cs" />
     <Compile Include="Directory.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Evidence.cs" />
     <Compile Include="File.cs" />
     <Compile Include="FilesystemItem.cs" />
     <Compile Include="Iso19770_2.cs" />
+    <Compile Include="JsonExtensions.cs" />
     <Compile Include="Link.cs" />
     <Compile Include="MediaQuery.cs" />
     <Compile Include="Meta.cs" />
